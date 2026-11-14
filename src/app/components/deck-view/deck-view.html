@@ -3,7 +3,7 @@
     <header class="deck-heading">
       <div>
         <p class="eyebrow">{{ deck.description }}</p>
-        <h2 id="deck-title">{{ deck.title }}</h2>
+        <h2 id="deck-title" tabindex="-1">{{ deck.title }}</h2>
       </div>
       <span class="card-count">{{ deck.cards.length }} cards</span>
     </header>
@@ -12,6 +12,7 @@
       <mat-form-field appearance="outline" class="search-field">
         <mat-label>Search cards</mat-label>
         <input
+          id="card-search"
           matInput
           type="search"
           [value]="searchText()"
@@ -24,19 +25,10 @@
             matSuffix
             type="button"
             aria-label="Clear search"
+            matTooltip="Clear search"
             (click)="clearSearch()"
           >
-            <svg
-              aria-hidden="true"
-              focusable="false"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-            >
-              <path d="m6 6 12 12M18 6 6 18" />
-            </svg>
+            <mat-icon aria-hidden="true">close</mat-icon>
           </button>
         }
       </mat-form-field>
@@ -50,9 +42,13 @@
           [disabled]="filteredCards().length === 0"
           (click)="studySession.shuffle()"
         >
+          <mat-icon aria-hidden="true">shuffle</mat-icon>
           Shuffle
         </button>
-        <button mat-flat-button type="button" (click)="createCard(deck.id)">New Card</button>
+        <button mat-flat-button type="button" (click)="createCard(deck.id)">
+          <mat-icon aria-hidden="true">add</mat-icon>
+          New Card
+        </button>
       </div>
     </div>
 
@@ -67,15 +63,23 @@
           Card {{ studySession.currentIndex() + 1 }} of {{ studySession.order().length }}
         </p>
       } @else {
-        <div class="no-cards">
-          @if (searchTerm()) {
-            <p>No cards found for "{{ searchTerm() }}"</p>
-            <button mat-flat-button type="button" (click)="clearSearch()">Clear search</button>
-          } @else {
-            <p>No cards in this deck</p>
-            <button mat-flat-button type="button" (click)="createCard(deck.id)">Add card</button>
-          }
-        </div>
+        @if (searchTerm()) {
+          <app-empty-state
+            icon="search"
+            heading="No search results"
+            [message]="'No cards found for &quot;' + searchTerm() + '&quot;.'"
+            actionLabel="Clear search"
+            (action)="clearSearch()"
+          />
+        } @else {
+          <app-empty-state
+            icon="style"
+            heading="No cards yet"
+            message="Add a card to this deck to begin studying."
+            actionLabel="Add card"
+            (action)="createCard(deck.id)"
+          />
+        }
       }
 
       <div class="study-controls" role="group" aria-label="Study controls">
@@ -85,6 +89,7 @@
           [disabled]="!studySession.currentCard() || studySession.currentIndex() === 0"
           (click)="studySession.previous()"
         >
+          <mat-icon aria-hidden="true">chevron_left</mat-icon>
           Previous
         </button>
         <button
@@ -93,6 +98,7 @@
           [disabled]="!studySession.currentCard()"
           (click)="studySession.toggleFlip()"
         >
+          <mat-icon aria-hidden="true">flip</mat-icon>
           Flip
         </button>
         <button
@@ -104,6 +110,7 @@
           "
           (click)="studySession.next()"
         >
+          <mat-icon aria-hidden="true">chevron_right</mat-icon>
           Next
         </button>
       </div>

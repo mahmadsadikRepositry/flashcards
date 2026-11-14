@@ -1,12 +1,13 @@
 import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { DeckStore } from '../../services/deck-store';
 import { DeckDialog, DeckDialogData } from '../deck-dialog/deck-dialog';
 
 @Component({
-  imports: [MatButtonModule, MatDialogModule, MatToolbarModule],
+  imports: [MatButtonModule, MatDialogModule, MatIconModule, MatToolbarModule],
   selector: 'app-header',
   styleUrl: './header.scss',
   templateUrl: './header.html',

@@ -37,6 +37,19 @@ describe('CardDialog', () => {
     expect(answer.hasError('maxlength')).toBe(true);
   });
 
+  it('disables submission while either field is invalid', () => {
+    fixture.detectChanges();
+    const submit = fixture.nativeElement.querySelector(
+      'button[type="submit"]',
+    ) as HTMLButtonElement;
+    expect(submit.disabled).toBe(true);
+
+    component.form.setValue({ question: 'Question', answer: 'Answer' });
+    fixture.detectChanges();
+
+    expect(submit.disabled).toBe(false);
+  });
+
   it('submits the front and back text when both fields are valid', () => {
     const dialogRef = TestBed.inject(MatDialogRef);
     const close = vi.spyOn(dialogRef, 'close');

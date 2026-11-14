@@ -6,18 +6,25 @@
       <input matInput formControlName="name" maxlength="60" />
       @if (form.controls.name.hasError('required')) {
         <mat-error>A deck name is required.</mat-error>
-      } @else if (form.controls.name.hasError('whitespace')) {
+      }
+      @if (form.controls.name.hasError('whitespace')) {
         <mat-error>Deck name cannot contain only whitespace.</mat-error>
-      } @else if (form.controls.name.hasError('maxlength')) {
+      }
+      @if (form.controls.name.hasError('maxlength')) {
         <mat-error>Deck name must be 60 characters or fewer.</mat-error>
-      } @else if (form.controls.name.hasError('duplicate')) {
+      }
+      @if (form.controls.name.hasError('duplicate')) {
         <mat-error>A deck with this name already exists.</mat-error>
       }
     </mat-form-field>
   </mat-dialog-content>
   <mat-dialog-actions align="end">
-    <button mat-button type="button" mat-dialog-close>Cancel</button>
-    <button mat-flat-button type="submit">
+    <button mat-button type="button" [mat-dialog-close]="null">
+      <mat-icon aria-hidden="true">close</mat-icon>
+      Cancel
+    </button>
+    <button mat-flat-button type="submit" [disabled]="form.invalid">
+      <mat-icon aria-hidden="true">{{ data.mode === 'new' ? 'add' : 'save' }}</mat-icon>
       {{ data.mode === 'new' ? 'Create' : 'Save' }}
     </button>
   </mat-dialog-actions>

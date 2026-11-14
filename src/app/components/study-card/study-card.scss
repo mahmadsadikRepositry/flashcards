@@ -39,7 +39,7 @@
   justify-content: center;
   overflow-y: auto;
   padding: clamp(var(--space-5), 6vw, var(--space-9));
-  border: 1px solid var(--mat-sys-outline-variant);
+  border: 1px solid var(--mat-sys-outline);
   border-radius: var(--radius-xl);
   background: var(--mat-sys-surface-container-lowest);
   box-shadow: 0 18px 48px
@@ -81,7 +81,7 @@
   width: 48px;
   height: 1px;
   margin: var(--space-6) auto;
-  background: var(--mat-sys-outline-variant);
+  background: var(--mat-sys-outline);
 }
 
 .card-answer-label {

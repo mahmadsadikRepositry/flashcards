@@ -77,10 +77,13 @@ describe('StudySession', () => {
       ],
     };
     service.setDeck(deck);
+    const originalOrder = service.order();
     service.next();
     service.toggleFlip();
     service.shuffle();
 
+    expect(originalOrder).toEqual(['first', 'second', 'third']);
+    expect(service.order()).not.toBe(originalOrder);
     expect(service.order().slice().sort()).toEqual(['first', 'second', 'third']);
     expect(deck.cards.map((card) => card.id)).toEqual(['first', 'second', 'third']);
     expect(service.currentIndex()).toBe(0);

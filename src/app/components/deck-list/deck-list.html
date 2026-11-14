@@ -1,5 +1,5 @@
 <nav class="deck-navigation" aria-label="Decks">
-  <h2 class="section-title">Your decks</h2>
+  <h2 id="deck-list-title" class="section-title" tabindex="-1">Your decks</h2>
   <div class="deck-list" role="list">
     @for (deck of deckStore.decks(); track deck.id) {
       <div class="deck-row" role="listitem">
@@ -11,6 +11,7 @@
           [attr.aria-current]="deck.id === deckStore.activeDeckId() ? 'true' : null"
           (click)="deckStore.selectDeck(deck.id)"
         >
+          <mat-icon aria-hidden="true">style</mat-icon>
           <span class="deck-title">{{ deck.title }}</span>
           <span class="deck-count">{{ deck.cards.length }} cards</span>
         </button>
@@ -18,25 +19,19 @@
           mat-icon-button
           type="button"
           [attr.aria-label]="'Rename ' + deck.title"
+          [matTooltip]="'Rename ' + deck.title"
           (click)="renameDeck(deck.id, deck.title)"
         >
-          <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24">
-            <path
-              d="M4 16.5V20h3.5L18.8 8.7l-3.5-3.5L4 16.5Zm17.7-10.2a.9.9 0 0 0 0-1.3l-2.2-2.2a.9.9 0 0 0-1.3 0l-1.7 1.7 3.5 3.5 1.7-1.7Z"
-            />
-          </svg>
+          <mat-icon aria-hidden="true">edit</mat-icon>
         </button>
         <button
           mat-icon-button
           type="button"
           [attr.aria-label]="'Delete ' + deck.title"
+          [matTooltip]="'Delete ' + deck.title"
           (click)="deleteDeck(deck.id, deck.title)"
         >
-          <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24">
-            <path
-              d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12ZM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4Z"
-            />
-          </svg>
+          <mat-icon aria-hidden="true">delete</mat-icon>
         </button>
       </div>
     }

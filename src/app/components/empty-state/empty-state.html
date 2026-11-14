@@ -1,5 +1,9 @@
 <section class="empty-state" aria-labelledby="empty-state-title">
-  <h2 id="empty-state-title">No decks yet</h2>
-  <p>Create a deck to start organizing your flashcards.</p>
-  <button mat-flat-button type="button" (click)="createDeck()">Create your first deck</button>
+  <mat-icon aria-hidden="true">{{ icon() }}</mat-icon>
+  <h2 id="empty-state-title">{{ heading() }}</h2>
+  <p>{{ message() }}</p>
+  <button mat-flat-button type="button" (click)="action.emit()">
+    <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+    {{ actionLabel() }}
+  </button>
 </section>

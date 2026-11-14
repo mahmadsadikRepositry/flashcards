@@ -1,7 +1,7 @@
 .app-toolbar {
   min-height: 72px;
   padding-inline: var(--space-8);
-  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  border-bottom: 1px solid var(--mat-sys-outline);
   background: var(--mat-sys-surface);
 }
 
@@ -11,17 +11,6 @@ h1 {
   font-size: 1.25rem;
   font-weight: 650;
   letter-spacing: -0.02em;
-}
-
-.brand-mark {
-  width: 14px;
-  height: 18px;
-  margin-right: var(--space-3);
-  border: 2px solid var(--mat-sys-primary);
-  border-radius: 4px;
-  box-shadow: 4px 3px 0 -1px var(--mat-sys-surface),
-    4px 3px 0 1px var(--mat-sys-primary);
-  transform: rotate(-7deg);
 }
 
 .toolbar-spacer {

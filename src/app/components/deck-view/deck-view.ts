@@ -1,14 +1,18 @@
 import { Component, computed, effect, inject, signal, untracked } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { debounceTime } from 'rxjs';
 import { DeckStore } from '../../services/deck-store';
 import { StudySession } from '../../services/study-session';
 import { CardDialog, CardDialogData, CardDialogResult } from '../card-dialog/card-dialog';
 import { CardList } from '../card-list/card-list';
+import { EmptyState } from '../empty-state/empty-state';
 import { StudyCard } from '../study-card/study-card';
 
 @Component({
@@ -17,7 +21,10 @@ import { StudyCard } from '../study-card/study-card';
     MatButtonModule,
     MatDialogModule,
     MatFormFieldModule,
+    MatIconModule,
     MatInputModule,
+    MatTooltipModule,
+    EmptyState,
     StudyCard,
   ],
   selector: 'app-deck-view',
@@ -49,6 +56,7 @@ export class DeckView {
       : cards;
   });
   private readonly dialog = inject(MatDialog);
+  private readonly document = inject(DOCUMENT);
 
   constructor() {
     let previousDeckId: string | null | undefined;
@@ -76,20 +84,32 @@ export class DeckView {
 
   clearSearch(): void {
     this.searchText.set('');
+    setTimeout(() => this.document.getElementById('card-search')?.focus());
   }
 
   createCard(deckId: string): void {
+    const trigger = this.document.activeElement;
     const dialogRef = this.dialog.open<
       CardDialog,
       CardDialogData,
       CardDialogResult | null
     >(CardDialog, {
       data: { mode: 'new', deckId },
+      restoreFocus: false,
     });
 
     dialogRef.afterClosed().subscribe((card) => {
       if (card) {
         this.deckStore.addCard(deckId, card.question, card.answer);
+        setTimeout(() => {
+          if (trigger instanceof HTMLElement && trigger.isConnected) {
+            trigger.focus();
+          } else {
+            this.document.getElementById('deck-title')?.focus();
+          }
+        });
+      } else if (trigger instanceof HTMLElement && trigger.isConnected) {
+        trigger.focus();
       }
     });
   }

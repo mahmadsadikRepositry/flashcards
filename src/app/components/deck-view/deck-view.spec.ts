@@ -173,8 +173,8 @@ describe('DeckView', () => {
     await fixture.whenStable();
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.textContent).toContain('No cards in this deck');
-    expect(fixture.nativeElement.querySelector('.no-cards button').textContent).toContain(
+    expect(fixture.nativeElement.textContent).toContain('No cards yet');
+    expect(fixture.nativeElement.querySelector('.empty-state button').textContent).toContain(
       'Add card',
     );
     const controls = fixture.nativeElement.querySelectorAll(
@@ -191,6 +191,7 @@ describe('DeckView', () => {
     component.deckStore.selectDeck('world-capitals');
     await fixture.whenStable();
     fixture.detectChanges();
+    const originalCards = component.deckStore.activeDeck()?.cards.map((card) => ({ ...card }));
 
     expect(
       (fixture.nativeElement.querySelector('.search-field input') as HTMLInputElement).value,
@@ -212,6 +213,7 @@ describe('DeckView', () => {
     expect(component.studySession.currentIndex()).toBe(0);
     expect(component.studySession.isFlipped()).toBe(false);
     expect(fixture.nativeElement.querySelectorAll('app-card-list mat-list-item')).toHaveLength(1);
+    expect(component.deckStore.activeDeck()?.cards).toEqual(originalCards);
   });
 
   it('shows no-match feedback and clears the search with the button or Escape', async () => {
@@ -221,9 +223,10 @@ describe('DeckView', () => {
     await new Promise((resolve) => setTimeout(resolve, 350));
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.textContent).toContain('No cards found for "mars"');
+    expect(fixture.nativeElement.textContent).toContain('No search results');
+    expect(fixture.nativeElement.textContent).toContain('No cards found for "mars".');
     const clearButton = fixture.nativeElement.querySelector(
-      '.no-cards button',
+      '.empty-state button',
     ) as HTMLButtonElement;
     expect(clearButton.textContent).toContain('Clear search');
     clearButton.click();

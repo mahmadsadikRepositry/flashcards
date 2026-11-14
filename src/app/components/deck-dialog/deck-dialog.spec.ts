@@ -63,6 +63,29 @@ describe('DeckDialog', () => {
     expect(name.hasError('duplicate')).toBe(true);
   });
 
+  it('disables submission while the deck name is invalid', () => {
+    fixture.detectChanges();
+    const submit = fixture.nativeElement.querySelector(
+      'button[type="submit"]',
+    ) as HTMLButtonElement;
+    expect(submit.disabled).toBe(true);
+
+    component.form.controls.name.setValue('New deck');
+    fixture.detectChanges();
+
+    expect(submit.disabled).toBe(false);
+  });
+
+  it('returns null when the user cancels', () => {
+    const dialogRef = TestBed.inject(MatDialogRef);
+    const close = vi.spyOn(dialogRef, 'close');
+    fixture.detectChanges();
+
+    (fixture.nativeElement.querySelector('mat-dialog-actions button') as HTMLButtonElement).click();
+
+    expect(close).toHaveBeenCalledWith(null);
+  });
+
   it('allows the current deck name while renaming that deck', () => {
     component.data.mode = 'rename';
     component.data.deckId = 'biology-basics';

@@ -6,7 +6,13 @@
     @if (deckStore.decks().length > 0) {
       <app-deck-view />
     } @else {
-      <app-empty-state />
+      <app-empty-state
+        icon="style"
+        heading="No decks yet"
+        message="Create a deck to start organizing your flashcards."
+        actionLabel="Create your first deck"
+        (action)="createDeck()"
+      />
     }
   </main>
 </div>

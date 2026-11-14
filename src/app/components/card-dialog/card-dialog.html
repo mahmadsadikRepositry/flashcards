@@ -7,9 +7,11 @@
       <mat-hint>{{ form.controls.question.value.length }}/500</mat-hint>
       @if (form.controls.question.hasError('required')) {
         <mat-error>The front is required.</mat-error>
-      } @else if (form.controls.question.hasError('whitespace')) {
+      }
+      @if (form.controls.question.hasError('whitespace')) {
         <mat-error>The front cannot contain only whitespace.</mat-error>
-      } @else if (form.controls.question.hasError('maxlength')) {
+      }
+      @if (form.controls.question.hasError('maxlength')) {
         <mat-error>The front must be 500 characters or fewer.</mat-error>
       }
     </mat-form-field>
@@ -19,16 +21,22 @@
       <mat-hint>{{ form.controls.answer.value.length }}/500</mat-hint>
       @if (form.controls.answer.hasError('required')) {
         <mat-error>The back is required.</mat-error>
-      } @else if (form.controls.answer.hasError('whitespace')) {
+      }
+      @if (form.controls.answer.hasError('whitespace')) {
         <mat-error>The back cannot contain only whitespace.</mat-error>
-      } @else if (form.controls.answer.hasError('maxlength')) {
+      }
+      @if (form.controls.answer.hasError('maxlength')) {
         <mat-error>The back must be 500 characters or fewer.</mat-error>
       }
     </mat-form-field>
   </mat-dialog-content>
   <mat-dialog-actions align="end">
-    <button mat-button type="button" mat-dialog-close>Cancel</button>
-    <button mat-flat-button type="submit">
+    <button mat-button type="button" [mat-dialog-close]="null">
+      <mat-icon aria-hidden="true">close</mat-icon>
+      Cancel
+    </button>
+    <button mat-flat-button type="submit" [disabled]="form.invalid">
+      <mat-icon aria-hidden="true">{{ data.mode === 'new' ? 'add' : 'save' }}</mat-icon>
       {{ data.mode === 'new' ? 'Create' : 'Save' }}
     </button>
   </mat-dialog-actions>

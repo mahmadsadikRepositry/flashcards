@@ -58,6 +58,19 @@ describe('Storage', () => {
     expect(localStorage.getItem(backupKey!)).toBe(raw);
   });
 
+  it('falls back to the default state when saved JSON has the wrong shape', () => {
+    localStorage.setItem(
+      'flashcards.state',
+      JSON.stringify({ version: 1, decks: 'not-an-array', activeDeckId: null }),
+    );
+
+    expect(service.loadState()).toEqual({
+      version: 1,
+      decks: [],
+      activeDeckId: null,
+    });
+  });
+
   it('rejects invalid nested deck data and unsupported versions', () => {
     expect(
       service.migrate(1, {
