@@ -7,6 +7,21 @@ describe('DeckDialog', () => {
   let fixture: ComponentFixture<DeckDialog>;
 
   beforeEach(async () => {
+    localStorage.setItem(
+      'flashcards.state',
+      JSON.stringify({
+        version: 1,
+        decks: [
+          {
+            id: 'biology-basics',
+            title: 'Biology Basics',
+            description: '',
+            cards: [],
+          },
+        ],
+        activeDeckId: 'biology-basics',
+      }),
+    );
     await TestBed.configureTestingModule({
       imports: [DeckDialog],
       providers: [
@@ -18,6 +33,10 @@ describe('DeckDialog', () => {
     fixture = TestBed.createComponent(DeckDialog);
     component = fixture.componentInstance;
     await fixture.whenStable();
+  });
+
+  afterEach(() => {
+    localStorage.clear();
   });
 
   it('should create', () => {

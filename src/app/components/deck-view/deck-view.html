@@ -11,13 +11,43 @@
     <div class="deck-toolbar" role="toolbar" aria-label="Deck actions">
       <mat-form-field appearance="outline" class="search-field">
         <mat-label>Search cards</mat-label>
-        <input matInput type="search" />
+        <input
+          matInput
+          type="search"
+          [value]="searchText()"
+          (input)="handleSearchInput($event)"
+          (keydown.escape)="clearSearch()"
+        />
+        @if (searchText()) {
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            aria-label="Clear search"
+            (click)="clearSearch()"
+          >
+            <svg
+              aria-hidden="true"
+              focusable="false"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            >
+              <path d="m6 6 12 12M18 6 6 18" />
+            </svg>
+          </button>
+        }
       </mat-form-field>
+      <p class="search-count" aria-live="polite" aria-atomic="true">
+        {{ filteredCards().length }} of {{ deck.cards.length }} cards match
+      </p>
       <div class="toolbar-actions">
         <button
           mat-stroked-button
           type="button"
-          [disabled]="deck.cards.length === 0"
+          [disabled]="filteredCards().length === 0"
           (click)="studySession.shuffle()"
         >
           Shuffle
@@ -38,8 +68,13 @@
         </p>
       } @else {
         <div class="no-cards">
-          <p>No cards in this deck</p>
-          <button mat-flat-button type="button" (click)="createCard(deck.id)">Add card</button>
+          @if (searchTerm()) {
+            <p>No cards found for "{{ searchTerm() }}"</p>
+            <button mat-flat-button type="button" (click)="clearSearch()">Clear search</button>
+          } @else {
+            <p>No cards in this deck</p>
+            <button mat-flat-button type="button" (click)="createCard(deck.id)">Add card</button>
+          }
         </div>
       }
 
@@ -87,6 +122,8 @@
       </p>
     </div>
 
-    <app-card-list [deck]="deck" />
+    @if (filteredCards().length > 0 || !searchTerm()) {
+      <app-card-list [deck]="deck" [cards]="filteredCards()" />
+    }
   </section>
 }

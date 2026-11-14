@@ -1,8 +1,8 @@
 <section class="card-list-section" aria-labelledby="card-list-title">
   <h3 id="card-list-title">Cards</h3>
-  @if (deck().cards.length > 0) {
+  @if (cards().length > 0) {
     <mat-list>
-      @for (card of deck().cards; track card.id) {
+      @for (card of cards(); track card.id) {
         <mat-list-item>
           <span matListItemTitle class="card-front">{{ card.question }}</span>
           <span matListItemMeta class="card-actions">

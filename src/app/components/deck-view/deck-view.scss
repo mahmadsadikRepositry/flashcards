@@ -49,6 +49,14 @@ h2 {
   max-width: 420px;
 }
 
+.search-count {
+  margin: 0;
+  padding-top: var(--space-3);
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
 .toolbar-actions {
   display: flex;
   flex-wrap: wrap;
@@ -115,6 +123,10 @@ h2 {
     flex: 0 0 auto;
     width: 100%;
     max-width: none;
+  }
+
+  .search-count {
+    padding-top: 0;
   }
 
   .toolbar-actions {

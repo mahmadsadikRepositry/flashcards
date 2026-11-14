@@ -3,11 +3,48 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialog } from '../confirm-dialog/confirm-dialog';
 import { DeckView } from './deck-view';
 
+const savedState = {
+  version: 1,
+  decks: [
+    {
+      id: 'biology-basics',
+      title: 'Biology Basics',
+      description: 'Core concepts in cells and life science',
+      cards: [
+        { id: 'cell', question: 'What is the basic unit of life?', answer: 'The cell' },
+        {
+          id: 'photosynthesis',
+          question: 'What process lets plants turn sunlight into energy?',
+          answer: 'Photosynthesis',
+        },
+        {
+          id: 'mitochondria',
+          question: 'Which organelle is often called the powerhouse of the cell?',
+          answer: 'The mitochondrion',
+        },
+      ],
+    },
+    {
+      id: 'world-capitals',
+      title: 'World Capitals',
+      description: 'A quick tour of capital cities',
+      cards: [
+        { id: 'japan', question: 'What is the capital of Japan?', answer: 'Tokyo' },
+        { id: 'kenya', question: 'What is the capital of Kenya?', answer: 'Nairobi' },
+        { id: 'portugal', question: 'What is the capital of Portugal?', answer: 'Lisbon' },
+      ],
+    },
+  ],
+  activeDeckId: 'biology-basics',
+};
+
 describe('DeckView', () => {
   let component: DeckView;
   let fixture: ComponentFixture<DeckView>;
 
   beforeEach(async () => {
+    localStorage.clear();
+    localStorage.setItem('flashcards.state', JSON.stringify(savedState));
     await TestBed.configureTestingModule({
       imports: [DeckView],
     }).compileComponents();
@@ -15,6 +52,10 @@ describe('DeckView', () => {
     fixture = TestBed.createComponent(DeckView);
     component = fixture.componentInstance;
     await fixture.whenStable();
+  });
+
+  afterEach(() => {
+    localStorage.clear();
   });
 
   it('should create', () => {
@@ -144,5 +185,54 @@ describe('DeckView', () => {
       (fixture.nativeElement.querySelector('.toolbar-actions button') as HTMLButtonElement)
         .disabled,
     ).toBe(true);
+  });
+
+  it('filters cards by either side and resets study position and flip state', async () => {
+    component.deckStore.selectDeck('world-capitals');
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(
+      (fixture.nativeElement.querySelector('.search-field input') as HTMLInputElement).value,
+    ).toBe('');
+
+    component.studySession.next();
+    component.studySession.toggleFlip();
+    const input = fixture.nativeElement.querySelector(
+      '.search-field input',
+    ) as HTMLInputElement;
+    input.value = '  tOkYo  ';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await new Promise((resolve) => setTimeout(resolve, 350));
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('1 of 3 cards match');
+    expect(component.filteredCards().map((card) => card.id)).toEqual(['japan']);
+    expect(component.studySession.currentCard()?.id).toBe('japan');
+    expect(component.studySession.currentIndex()).toBe(0);
+    expect(component.studySession.isFlipped()).toBe(false);
+    expect(fixture.nativeElement.querySelectorAll('app-card-list mat-list-item')).toHaveLength(1);
+  });
+
+  it('shows no-match feedback and clears the search with the button or Escape', async () => {
+    const input = fixture.nativeElement.querySelector('.search-field input') as HTMLInputElement;
+    input.value = 'mars';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await new Promise((resolve) => setTimeout(resolve, 350));
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('No cards found for "mars"');
+    const clearButton = fixture.nativeElement.querySelector(
+      '.no-cards button',
+    ) as HTMLButtonElement;
+    expect(clearButton.textContent).toContain('Clear search');
+    clearButton.click();
+    fixture.detectChanges();
+    expect(component.searchText()).toBe('');
+
+    input.value = 'biology';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    expect(component.searchText()).toBe('');
   });
 });

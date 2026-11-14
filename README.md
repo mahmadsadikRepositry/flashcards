@@ -44,6 +44,8 @@ To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use th
 ng test
 ```
 
+Decks and the active deck are saved in browser local storage under `flashcards.state`.
+
 ## Running end-to-end tests
 
 For end-to-end (e2e) testing, run:

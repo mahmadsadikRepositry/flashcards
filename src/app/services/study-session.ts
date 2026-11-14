@@ -56,6 +56,13 @@ export class StudySession {
     }
   }
 
+  setCards(cards: Card[]): void {
+    this.cards.set(cards);
+    this._order.set(cards.map((card) => card.id));
+    this._currentIndex.set(0);
+    this.reset();
+  }
+
   previous(): void {
     if (this.currentIndex() === 0 || !this.currentCard()) {
       return;

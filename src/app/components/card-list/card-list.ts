@@ -2,6 +2,7 @@ import { Component, inject, input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatListModule } from '@angular/material/list';
+import type { Card } from '../../models/card';
 import type { Deck } from '../../models/deck';
 import { DeckStore } from '../../services/deck-store';
 import { CardDialog, CardDialogData, CardDialogResult } from '../card-dialog/card-dialog';
@@ -15,6 +16,7 @@ import { ConfirmDialog, ConfirmDialogData } from '../confirm-dialog/confirm-dial
 })
 export class CardList {
   readonly deck = input.required<Deck>();
+  readonly cards = input.required<Card[]>();
   private readonly deckStore = inject(DeckStore);
   private readonly dialog = inject(MatDialog);
 

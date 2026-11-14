@@ -13,7 +13,14 @@ describe('CardList', () => {
 
     fixture = TestBed.createComponent(CardList);
     component = fixture.componentInstance;
-    fixture.componentRef.setInput('deck', TestBed.inject(DeckStore).activeDeck());
+    const deck = TestBed.inject(DeckStore).activeDeck() ?? {
+      id: 'empty',
+      title: 'Empty',
+      description: '',
+      cards: [],
+    };
+    fixture.componentRef.setInput('deck', deck);
+    fixture.componentRef.setInput('cards', deck.cards);
     await fixture.whenStable();
   });
 

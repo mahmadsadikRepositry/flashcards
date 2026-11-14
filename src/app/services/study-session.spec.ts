@@ -88,6 +88,26 @@ describe('StudySession', () => {
     expect(service.currentCard()?.id).toBe(service.order()[0]);
   });
 
+  it('resets to the first card and unflips when its card list is replaced', () => {
+    service.setDeck({
+      id: 'deck',
+      title: 'Deck',
+      description: '',
+      cards: [
+        { id: 'first', question: 'First?', answer: 'First.' },
+        { id: 'second', question: 'Second?', answer: 'Second.' },
+      ],
+    });
+    service.next();
+    service.toggleFlip();
+
+    service.setCards([{ id: 'filtered', question: 'Filtered?', answer: 'Filtered.' }]);
+
+    expect(service.currentCard()?.id).toBe('filtered');
+    expect(service.currentIndex()).toBe(0);
+    expect(service.isFlipped()).toBe(false);
+  });
+
   it('clamps the index and clears the session when the deck becomes empty', () => {
     service.setDeck({
       id: 'deck',

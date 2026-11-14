@@ -1,21 +1,86 @@
 import { TestBed } from '@angular/core/testing';
 import { DeckStore } from './deck-store';
 
+const savedState = {
+  version: 1,
+  decks: [
+    {
+      id: 'biology-basics',
+      title: 'Biology Basics',
+      description: 'Core concepts in cells and life science',
+      cards: [
+        { id: 'cell', question: 'What is the basic unit of life?', answer: 'The cell' },
+        {
+          id: 'photosynthesis',
+          question: 'What process lets plants turn sunlight into energy?',
+          answer: 'Photosynthesis',
+        },
+        {
+          id: 'mitochondria',
+          question: 'Which organelle is often called the powerhouse of the cell?',
+          answer: 'The mitochondrion',
+        },
+      ],
+    },
+    {
+      id: 'world-capitals',
+      title: 'World Capitals',
+      description: 'A quick tour of capital cities',
+      cards: [
+        { id: 'japan', question: 'What is the capital of Japan?', answer: 'Tokyo' },
+        { id: 'kenya', question: 'What is the capital of Kenya?', answer: 'Nairobi' },
+        { id: 'portugal', question: 'What is the capital of Portugal?', answer: 'Lisbon' },
+      ],
+    },
+  ],
+  activeDeckId: 'biology-basics',
+};
+
 describe('DeckStore', () => {
   let service: DeckStore;
 
   beforeEach(() => {
+    localStorage.clear();
+    localStorage.setItem('flashcards.state', JSON.stringify(savedState));
     TestBed.configureTestingModule({});
     service = TestBed.inject(DeckStore);
+  });
+
+  afterEach(() => {
+    localStorage.clear();
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('provides two placeholder decks with three cards each', () => {
+  it('loads the saved decks without replacing their data on startup', () => {
     expect(service.decks()).toHaveLength(2);
     expect(service.decks().map((deck) => deck.cards.length)).toEqual([3, 3]);
+    expect(service.activeDeckId()).toBe('biology-basics');
+    expect(JSON.parse(localStorage.getItem('flashcards.state') ?? '{}')).toEqual(savedState);
+  });
+
+  it('uses the first deck if the saved active deck no longer exists', () => {
+    TestBed.resetTestingModule();
+    localStorage.setItem(
+      'flashcards.state',
+      JSON.stringify({ ...savedState, activeDeckId: 'missing' }),
+    );
+    TestBed.configureTestingModule({});
+    service = TestBed.inject(DeckStore);
+
+    expect(service.activeDeckId()).toBe('biology-basics');
+  });
+
+  it('starts with an empty state when no saved data exists', () => {
+    TestBed.resetTestingModule();
+    localStorage.removeItem('flashcards.state');
+    TestBed.configureTestingModule({});
+    service = TestBed.inject(DeckStore);
+
+    expect(service.decks()).toEqual([]);
+    expect(service.activeDeckId()).toBeNull();
   });
 
   it('creates a deck and makes it active', () => {
