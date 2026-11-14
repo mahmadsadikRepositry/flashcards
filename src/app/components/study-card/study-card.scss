@@ -1,0 +1,55 @@
+.study-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: min(100%, var(--card-width));
+  min-height: var(--card-height);
+  padding: clamp(var(--space-5), 6vw, var(--space-9));
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--radius-xl);
+  background: var(--mat-sys-surface-container-lowest);
+  box-shadow: 0 18px 48px
+    color-mix(in srgb, var(--mat-sys-shadow) 9%, transparent);
+  text-align: center;
+}
+
+.card-label {
+  margin: 0 0 var(--space-5);
+  color: var(--mat-sys-primary);
+  font-size: 0.75rem;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+}
+
+.card-question {
+  margin: 0;
+  color: var(--mat-sys-on-surface);
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-weight: 550;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.card-divider {
+  width: 48px;
+  height: 1px;
+  margin: var(--space-6) auto;
+  background: var(--mat-sys-outline-variant);
+}
+
+.card-answer-label {
+  margin: 0 0 var(--space-2);
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 0.75rem;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.card-answer {
+  margin: 0;
+  color: var(--mat-sys-on-surface);
+  font-size: 1.125rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}

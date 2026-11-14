@@ -12,4 +12,9 @@ describe('DeckStore', () => {
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
+
+  it('provides two placeholder decks with three cards each', () => {
+    expect(service.decks()).toHaveLength(2);
+    expect(service.decks().map((deck) => deck.cards.length)).toEqual([3, 3]);
+  });
 });

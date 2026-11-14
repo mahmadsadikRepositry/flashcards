@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
+import type { Card } from '../../models/card';
 
 @Component({
   imports: [],
@@ -6,4 +7,6 @@ import { Component } from '@angular/core';
   styleUrl: './study-card.scss',
   templateUrl: './study-card.html',
 })
-export class StudyCard {}
+export class StudyCard {
+  readonly card = input<Card>();
+}

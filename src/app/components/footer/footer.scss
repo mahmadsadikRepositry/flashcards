@@ -1,0 +1,25 @@
+.shortcut-footer {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-4);
+  border-top: 1px solid var(--mat-sys-outline-variant);
+  background: var(--mat-sys-surface);
+}
+
+p {
+  margin: 0;
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 0.75rem;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+kbd {
+  padding: 2px 6px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--radius-sm);
+  background: var(--mat-sys-surface-container);
+  color: var(--mat-sys-on-surface);
+  font: inherit;
+  font-weight: 650;
+}

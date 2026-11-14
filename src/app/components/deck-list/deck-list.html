@@ -1,1 +1,18 @@
-<p>deck-list works!</p>
+<nav class="deck-navigation" aria-label="Decks">
+  <h2 class="section-title">Your decks</h2>
+  <mat-nav-list>
+    @for (deck of deckStore.decks(); track deck.id) {
+      <button
+        mat-list-item
+        type="button"
+        class="deck-link"
+        [class.active]="deck.id === deckStore.activeDeckId()"
+        [attr.aria-current]="deck.id === deckStore.activeDeckId() ? 'true' : null"
+        (click)="deckStore.selectDeck(deck.id)"
+      >
+        <span matListItemTitle>{{ deck.title }}</span>
+        <span matListItemLine>{{ deck.cards.length }} cards</span>
+      </button>
+    }
+  </mat-nav-list>
+</nav>

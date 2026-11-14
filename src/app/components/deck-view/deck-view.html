@@ -1,1 +1,31 @@
-<p>deck-view works!</p>
+@if (deckStore.activeDeck(); as deck) {
+  <section class="deck-view" aria-labelledby="deck-title">
+    <header class="deck-heading">
+      <div>
+        <p class="eyebrow">{{ deck.description }}</p>
+        <h2 id="deck-title">{{ deck.title }}</h2>
+      </div>
+      <span class="card-count">{{ deck.cards.length }} cards</span>
+    </header>
+
+    <div class="deck-toolbar" role="toolbar" aria-label="Deck actions">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Search cards</mat-label>
+        <input matInput type="search" />
+      </mat-form-field>
+      <div class="toolbar-actions">
+        <button mat-stroked-button type="button">Shuffle</button>
+        <button mat-flat-button type="button">New Card</button>
+      </div>
+    </div>
+
+    <div class="study-area">
+      <app-study-card [card]="deck.cards[0]" />
+      <div class="study-controls" aria-label="Study controls">
+        <button mat-stroked-button type="button">Previous</button>
+        <button mat-flat-button type="button">Flip</button>
+        <button mat-stroked-button type="button">Next</button>
+      </div>
+    </div>
+  </section>
+}

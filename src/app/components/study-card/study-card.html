@@ -1,1 +1,9 @@
-<p>study-card works!</p>
+@if (card(); as currentCard) {
+  <article class="study-card" aria-label="Flashcard">
+    <p class="card-label">QUESTION</p>
+    <p class="card-question">{{ currentCard.question }}</p>
+    <div class="card-divider"></div>
+    <p class="card-answer-label">Answer</p>
+    <p class="card-answer">{{ currentCard.answer }}</p>
+  </article>
+}

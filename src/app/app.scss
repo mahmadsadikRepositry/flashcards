@@ -1,0 +1,33 @@
+:host {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  min-height: 100dvh;
+  min-width: 0;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  min-height: 0;
+}
+
+.main-content {
+  min-width: 0;
+  padding: var(--space-8);
+}
+
+@media (max-width: 767px) {
+  .workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .main-content {
+    padding: var(--space-5);
+  }
+}
+
+@media (max-width: 380px) {
+  .main-content {
+    padding: var(--space-4);
+  }
+}
