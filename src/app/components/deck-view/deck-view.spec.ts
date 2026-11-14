@@ -18,4 +18,22 @@ describe('DeckView', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('shows edits immediately and falls back when the current card is deleted', () => {
+    const deckId = 'biology-basics';
+    const firstCardId = 'cell';
+    component.deckStore.updateCard(deckId, firstCardId, 'Updated question', 'Updated answer');
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.card-question').textContent).toContain(
+      'Updated question',
+    );
+
+    component.deckStore.deleteCard(deckId, firstCardId);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.card-question').textContent).toContain(
+      'What process lets plants turn sunlight into energy?',
+    );
+  });
 });

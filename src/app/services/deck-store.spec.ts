@@ -35,6 +35,39 @@ describe('DeckStore', () => {
     expect(service.decks()[0].cards).toBe(cards);
   });
 
+  it('adds a card with a UUID and updates the deck timestamp', () => {
+    service.addCard('biology-basics', '  Front  ', '  Back  ');
+
+    const deck = service.decks()[0];
+    expect(deck.cards).toHaveLength(4);
+    expect(deck.cards[3]).toMatchObject({
+      question: '  Front  ',
+      answer: '  Back  ',
+    });
+    expect(deck.cards[3].id).toMatch(
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
+    );
+    expect(deck.updatedAt).toBeTruthy();
+  });
+
+  it('updates a card and the deck timestamp', () => {
+    service.updateCard('biology-basics', 'cell', 'Updated front', 'Updated back');
+
+    expect(service.decks()[0].cards[0]).toEqual({
+      id: 'cell',
+      question: 'Updated front',
+      answer: 'Updated back',
+    });
+    expect(service.decks()[0].updatedAt).toBeTruthy();
+  });
+
+  it('deletes a card and updates the deck timestamp', () => {
+    service.deleteCard('biology-basics', 'cell');
+
+    expect(service.decks()[0].cards.some((card) => card.id === 'cell')).toBe(false);
+    expect(service.decks()[0].updatedAt).toBeTruthy();
+  });
+
   it('selects the next deck after deleting the active deck, then the previous deck', () => {
     service.deleteDeck('biology-basics');
     expect(service.activeDeckId()).toBe('world-capitals');

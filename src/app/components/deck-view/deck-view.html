@@ -15,17 +15,23 @@
       </mat-form-field>
       <div class="toolbar-actions">
         <button mat-stroked-button type="button">Shuffle</button>
-        <button mat-flat-button type="button">New Card</button>
+        <button mat-flat-button type="button" (click)="createCard(deck.id)">New Card</button>
       </div>
     </div>
 
     <div class="study-area">
-      <app-study-card [card]="deck.cards[0]" />
-      <div class="study-controls" aria-label="Study controls">
-        <button mat-stroked-button type="button">Previous</button>
-        <button mat-flat-button type="button">Flip</button>
-        <button mat-stroked-button type="button">Next</button>
-      </div>
+      @if (currentCard(); as card) {
+        <app-study-card #studyCard [card]="card" />
+        <div class="study-controls" aria-label="Study controls">
+          <button mat-stroked-button type="button" (click)="moveCard(-1)">Previous</button>
+          <button mat-flat-button type="button" (click)="studyCard.toggle()">Flip</button>
+          <button mat-stroked-button type="button" (click)="moveCard(1)">Next</button>
+        </div>
+      } @else {
+        <p class="no-cards">Add a card to start studying.</p>
+      }
     </div>
+
+    <app-card-list [deck]="deck" />
   </section>
 }

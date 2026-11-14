@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { DeckStore } from '../../services/deck-store';
 import { CardList } from './card-list';
 
 describe('CardList', () => {
@@ -12,6 +13,7 @@ describe('CardList', () => {
 
     fixture = TestBed.createComponent(CardList);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('deck', TestBed.inject(DeckStore).activeDeck());
     await fixture.whenStable();
   });
 

@@ -5,4 +5,5 @@ export interface Deck {
   title: string;
   description: string;
   cards: Card[];
+  updatedAt?: string;
 }

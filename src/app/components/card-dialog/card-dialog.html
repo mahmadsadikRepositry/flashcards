@@ -1,1 +1,35 @@
-<p>card-dialog works!</p>
+<h2 mat-dialog-title>{{ data.mode === 'new' ? 'New Card' : 'Edit Card' }}</h2>
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <mat-dialog-content>
+    <mat-form-field appearance="outline">
+      <mat-label>Front</mat-label>
+      <textarea matInput formControlName="question" maxlength="500" rows="4"></textarea>
+      <mat-hint>{{ form.controls.question.value.length }}/500</mat-hint>
+      @if (form.controls.question.hasError('required')) {
+        <mat-error>The front is required.</mat-error>
+      } @else if (form.controls.question.hasError('whitespace')) {
+        <mat-error>The front cannot contain only whitespace.</mat-error>
+      } @else if (form.controls.question.hasError('maxlength')) {
+        <mat-error>The front must be 500 characters or fewer.</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Back</mat-label>
+      <textarea matInput formControlName="answer" maxlength="500" rows="4"></textarea>
+      <mat-hint>{{ form.controls.answer.value.length }}/500</mat-hint>
+      @if (form.controls.answer.hasError('required')) {
+        <mat-error>The back is required.</mat-error>
+      } @else if (form.controls.answer.hasError('whitespace')) {
+        <mat-error>The back cannot contain only whitespace.</mat-error>
+      } @else if (form.controls.answer.hasError('maxlength')) {
+        <mat-error>The back must be 500 characters or fewer.</mat-error>
+      }
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" mat-dialog-close>Cancel</button>
+    <button mat-flat-button type="submit">
+      {{ data.mode === 'new' ? 'Create' : 'Save' }}
+    </button>
+  </mat-dialog-actions>
+</form>

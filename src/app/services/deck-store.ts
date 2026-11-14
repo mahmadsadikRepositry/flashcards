@@ -60,6 +60,7 @@ export class DeckStore {
       title: name.trim(),
       description: '',
       cards: [],
+      updatedAt: new Date().toISOString(),
     };
 
     this.decks.update((decks) => [...decks, deck]);
@@ -68,7 +69,56 @@ export class DeckStore {
 
   renameDeck(id: string, name: string): void {
     this.decks.update((decks) =>
-      decks.map((deck) => (deck.id === id ? { ...deck, title: name.trim() } : deck)),
+      decks.map((deck) =>
+        deck.id === id
+          ? { ...deck, title: name.trim(), updatedAt: new Date().toISOString() }
+          : deck,
+      ),
+    );
+  }
+
+  addCard(deckId: string, question: string, answer: string): void {
+    const card = { id: crypto.randomUUID(), question, answer };
+    const updatedAt = new Date().toISOString();
+
+    this.decks.update((decks) =>
+      decks.map((deck) =>
+        deck.id === deckId
+          ? { ...deck, cards: [...deck.cards, card], updatedAt }
+          : deck,
+      ),
+    );
+  }
+
+  updateCard(deckId: string, cardId: string, question: string, answer: string): void {
+    const updatedAt = new Date().toISOString();
+
+    this.decks.update((decks) =>
+      decks.map((deck) =>
+        deck.id === deckId && deck.cards.some((card) => card.id === cardId)
+          ? {
+              ...deck,
+              cards: deck.cards.map((card) =>
+                card.id === cardId ? { ...card, question, answer } : card,
+              ),
+              updatedAt,
+            }
+          : deck,
+      ),
+    );
+  }
+
+  deleteCard(deckId: string, cardId: string): void {
+    this.decks.update((decks) =>
+      decks.map((deck) =>
+        deck.id === deckId && deck.cards.some((card) => card.id === cardId)
+          ? {
+              ...deck,
+              cards: deck.cards.filter((card) => card.id !== cardId),
+              updatedAt: new Date().toISOString(),
+            }
+          : deck,
+      ),
     );
   }
 

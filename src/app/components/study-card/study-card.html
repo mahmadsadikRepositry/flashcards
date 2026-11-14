@@ -1,9 +1,19 @@
 @if (card(); as currentCard) {
-  <article class="study-card" aria-label="Flashcard">
-    <p class="card-label">QUESTION</p>
-    <p class="card-question">{{ currentCard.question }}</p>
-    <div class="card-divider"></div>
-    <p class="card-answer-label">Answer</p>
-    <p class="card-answer">{{ currentCard.answer }}</p>
-  </article>
+  <button
+    class="card"
+    type="button"
+    [attr.aria-label]="isFlipped() ? 'Show question' : 'Show answer'"
+    (click)="toggle()"
+  >
+    <span class="card__inner" [class.is-flipped]="isFlipped()">
+      <span class="card__face card__face--front" [attr.aria-hidden]="isFlipped()">
+        <span class="card-label">QUESTION</span>
+        <span class="card-question">{{ currentCard.question }}</span>
+      </span>
+      <span class="card__face card__face--back" [attr.aria-hidden]="!isFlipped()">
+        <span class="card-answer-label">ANSWER</span>
+        <span class="card-answer">{{ currentCard.answer }}</span>
+      </span>
+    </span>
+  </button>
 }
