@@ -8,13 +8,17 @@
           type="button"
           class="deck-link"
           [class.active]="deck.id === deckStore.activeDeckId()"
+          [matTooltip]="deck.title"
           [attr.aria-current]="deck.id === deckStore.activeDeckId() ? 'true' : null"
           (click)="deckStore.selectDeck(deck.id)"
+            matTooltipShowDelay="500"
+        ...
         >
           <mat-icon aria-hidden="true">style</mat-icon>
           <span class="deck-title">{{ deck.title }}</span>
-          <span class="deck-count">{{ deck.cards.length }} cards</span>
+          <span class="deck-count">{{ deck.cards.length }} {{ deck.cards.length === 1 ? 'card' : 'cards' }}</span>
         </button>
+        <div class="deck-row__actions">
         <button
           mat-icon-button
           type="button"
@@ -33,6 +37,7 @@
         >
           <mat-icon aria-hidden="true">delete</mat-icon>
         </button>
+        </div>
       </div>
     }
   </div>
