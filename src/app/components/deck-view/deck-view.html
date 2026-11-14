@@ -14,22 +14,77 @@
         <input matInput type="search" />
       </mat-form-field>
       <div class="toolbar-actions">
-        <button mat-stroked-button type="button">Shuffle</button>
+        <button
+          mat-stroked-button
+          type="button"
+          [disabled]="deck.cards.length === 0"
+          (click)="studySession.shuffle()"
+        >
+          Shuffle
+        </button>
         <button mat-flat-button type="button" (click)="createCard(deck.id)">New Card</button>
       </div>
     </div>
 
     <div class="study-area">
-      @if (currentCard(); as card) {
-        <app-study-card #studyCard [card]="card" />
-        <div class="study-controls" aria-label="Study controls">
-          <button mat-stroked-button type="button" (click)="moveCard(-1)">Previous</button>
-          <button mat-flat-button type="button" (click)="studyCard.toggle()">Flip</button>
-          <button mat-stroked-button type="button" (click)="moveCard(1)">Next</button>
-        </div>
+      @if (studySession.currentCard(); as card) {
+        <app-study-card
+          [card]="card"
+          [isFlipped]="studySession.isFlipped()"
+          (flip)="studySession.toggleFlip()"
+        />
+        <p class="card-position">
+          Card {{ studySession.currentIndex() + 1 }} of {{ studySession.order().length }}
+        </p>
       } @else {
-        <p class="no-cards">Add a card to start studying.</p>
+        <div class="no-cards">
+          <p>No cards in this deck</p>
+          <button mat-flat-button type="button" (click)="createCard(deck.id)">Add card</button>
+        </div>
       }
+
+      <div class="study-controls" role="group" aria-label="Study controls">
+        <button
+          mat-stroked-button
+          type="button"
+          [disabled]="!studySession.currentCard() || studySession.currentIndex() === 0"
+          (click)="studySession.previous()"
+        >
+          Previous
+        </button>
+        <button
+          mat-flat-button
+          type="button"
+          [disabled]="!studySession.currentCard()"
+          (click)="studySession.toggleFlip()"
+        >
+          Flip
+        </button>
+        <button
+          mat-stroked-button
+          type="button"
+          [disabled]="
+            !studySession.currentCard() ||
+            studySession.currentIndex() >= studySession.order().length - 1
+          "
+          (click)="studySession.next()"
+        >
+          Next
+        </button>
+      </div>
+
+      <p class="visually-hidden" aria-live="polite">
+        {{
+          studySession.currentCard()
+            ? 'Card ' +
+              (studySession.currentIndex() + 1) +
+              ' of ' +
+              studySession.order().length +
+              ', showing ' +
+              (studySession.isFlipped() ? 'answer' : 'question')
+            : ''
+        }}
+      </p>
     </div>
 
     <app-card-list [deck]="deck" />

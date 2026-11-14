@@ -25,6 +25,7 @@ describe('StudyCard', () => {
       question: 'Question',
       answer: 'Answer',
     });
+    fixture.componentRef.setInput('isFlipped', false);
     fixture.detectChanges();
 
     const button = fixture.nativeElement.querySelector('button') as HTMLButtonElement;
@@ -32,9 +33,16 @@ describe('StudyCard', () => {
     expect(button.getAttribute('aria-label')).toBe('Show answer');
     expect(back.getAttribute('aria-hidden')).toBe('true');
 
+    let flipRequested = false;
+    component.flip.subscribe(() => {
+      flipRequested = true;
+    });
     button.click();
     fixture.detectChanges();
 
+    expect(flipRequested).toBe(true);
+    fixture.componentRef.setInput('isFlipped', true);
+    fixture.detectChanges();
     expect(button.getAttribute('aria-label')).toBe('Show question');
     expect((button.querySelector('.card__inner') as HTMLElement).classList.contains('is-flipped')).toBe(
       true,
@@ -48,6 +56,7 @@ describe('StudyCard', () => {
       question: 'Next question',
       answer: 'Next answer',
     });
+    fixture.componentRef.setInput('isFlipped', false);
     fixture.detectChanges();
 
     expect(button.getAttribute('aria-label')).toBe('Show answer');

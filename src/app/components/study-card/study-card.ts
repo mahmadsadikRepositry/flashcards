@@ -1,4 +1,4 @@
-import { Component, input, linkedSignal } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import type { Card } from '../../models/card';
 
 @Component({
@@ -9,12 +9,10 @@ import type { Card } from '../../models/card';
 })
 export class StudyCard {
   readonly card = input<Card>();
-  readonly isFlipped = linkedSignal({
-    source: this.card,
-    computation: () => false,
-  });
+  readonly isFlipped = input(false);
+  readonly flip = output<void>();
 
   toggle(): void {
-    this.isFlipped.update((flipped) => !flipped);
+    this.flip.emit();
   }
 }

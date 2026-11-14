@@ -1,9 +1,10 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, effect, HostListener, inject, untracked } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { DeckStore } from '../../services/deck-store';
+import { StudySession } from '../../services/study-session';
 import { CardDialog, CardDialogData, CardDialogResult } from '../card-dialog/card-dialog';
 import { CardList } from '../card-list/card-list';
 import { StudyCard } from '../study-card/study-card';
@@ -23,16 +24,16 @@ import { StudyCard } from '../study-card/study-card';
 })
 export class DeckView {
   readonly deckStore = inject(DeckStore);
+  readonly studySession = inject(StudySession);
   private readonly dialog = inject(MatDialog);
-  private readonly selectedCardId = signal<string | null>(null);
-  readonly currentCard = computed(() => {
-    const deck = this.deckStore.activeDeck();
-    if (!deck) {
-      return undefined;
-    }
 
-    return deck.cards.find((card) => card.id === this.selectedCardId()) ?? deck.cards[0];
-  });
+  constructor() {
+    this.studySession.setDeck(this.deckStore.activeDeck());
+    effect(() => {
+      const activeDeck = this.deckStore.activeDeck();
+      untracked(() => this.studySession.setDeck(activeDeck));
+    });
+  }
 
   createCard(deckId: string): void {
     const dialogRef = this.dialog.open<
@@ -46,21 +47,50 @@ export class DeckView {
     dialogRef.afterClosed().subscribe((card) => {
       if (card) {
         this.deckStore.addCard(deckId, card.question, card.answer);
-        const updatedDeck = this.deckStore.decks().find((item) => item.id === deckId);
-        this.selectedCardId.set(updatedDeck?.cards.at(-1)?.id ?? null);
       }
     });
   }
 
-  moveCard(offset: number): void {
-    const cards = this.deckStore.activeDeck()?.cards ?? [];
-    if (cards.length < 2) {
+  @HostListener('document:keydown', ['$event'])
+  handleKeydown(event: KeyboardEvent): void {
+    if (this.dialog.openDialogs.length > 0 || this.isIgnoredKeyboardTarget(event.target)) {
       return;
     }
 
-    const currentCard = this.currentCard();
-    const currentIndex = cards.findIndex((card) => card.id === currentCard?.id);
-    const nextIndex = (currentIndex + offset + cards.length) % cards.length;
-    this.selectedCardId.set(cards[nextIndex].id);
+    switch (event.key) {
+      case ' ':
+        if (this.studySession.currentCard()) {
+          event.preventDefault();
+          this.studySession.toggleFlip();
+        }
+        break;
+      case 'ArrowLeft':
+        this.studySession.previous();
+        break;
+      case 'ArrowRight':
+        this.studySession.next();
+        break;
+    }
+  }
+
+  private isIgnoredKeyboardTarget(target: EventTarget | null): boolean {
+    if (!(target instanceof Element)) {
+      return false;
+    }
+
+    if (target.closest('input, textarea, select, button')) {
+      return true;
+    }
+
+    let ancestor: Element | null = target;
+    while (ancestor) {
+      if (ancestor instanceof HTMLElement && ancestor.isContentEditable) {
+        return true;
+      }
+
+      ancestor = ancestor.parentElement;
+    }
+
+    return false;
   }
 }
