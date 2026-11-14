@@ -49,10 +49,45 @@ export class DeckStore {
       ],
     },
   ]);
-  readonly activeDeckId = signal('biology-basics');
+  readonly activeDeckId = signal<string | null>('biology-basics');
   readonly activeDeck = computed(
     () => this.decks().find((deck) => deck.id === this.activeDeckId()) ?? null,
   );
+
+  createDeck(name: string): void {
+    const deck: Deck = {
+      id: crypto.randomUUID(),
+      title: name.trim(),
+      description: '',
+      cards: [],
+    };
+
+    this.decks.update((decks) => [...decks, deck]);
+    this.activeDeckId.set(deck.id);
+  }
+
+  renameDeck(id: string, name: string): void {
+    this.decks.update((decks) =>
+      decks.map((deck) => (deck.id === id ? { ...deck, title: name.trim() } : deck)),
+    );
+  }
+
+  deleteDeck(id: string): void {
+    const decks = this.decks();
+    const deletedIndex = decks.findIndex((deck) => deck.id === id);
+    if (deletedIndex === -1) {
+      return;
+    }
+
+    const remainingDecks = decks.filter((deck) => deck.id !== id);
+    this.decks.set(remainingDecks);
+
+    if (this.activeDeckId() === id) {
+      this.activeDeckId.set(
+        remainingDecks[Math.min(deletedIndex, remainingDecks.length - 1)]?.id ?? null,
+      );
+    }
+  }
 
   selectDeck(deckId: string): void {
     if (this.decks().some((deck) => deck.id === deckId)) {

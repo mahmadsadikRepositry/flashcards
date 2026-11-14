@@ -1,1 +1,24 @@
-<p>deck-dialog works!</p>
+<h2 mat-dialog-title>{{ data.mode === 'new' ? 'New Deck' : 'Rename Deck' }}</h2>
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <mat-dialog-content>
+    <mat-form-field appearance="outline">
+      <mat-label>Deck name</mat-label>
+      <input matInput formControlName="name" maxlength="60" />
+      @if (form.controls.name.hasError('required')) {
+        <mat-error>A deck name is required.</mat-error>
+      } @else if (form.controls.name.hasError('whitespace')) {
+        <mat-error>Deck name cannot contain only whitespace.</mat-error>
+      } @else if (form.controls.name.hasError('maxlength')) {
+        <mat-error>Deck name must be 60 characters or fewer.</mat-error>
+      } @else if (form.controls.name.hasError('duplicate')) {
+        <mat-error>A deck with this name already exists.</mat-error>
+      }
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" mat-dialog-close>Cancel</button>
+    <button mat-flat-button type="submit">
+      {{ data.mode === 'new' ? 'Create' : 'Save' }}
+    </button>
+  </mat-dialog-actions>
+</form>

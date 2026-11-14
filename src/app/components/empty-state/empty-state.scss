@@ -1,0 +1,17 @@
+.empty-state {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  min-height: 100%;
+  align-content: center;
+  text-align: center;
+}
+
+.empty-state h2,
+.empty-state p {
+  margin: 0;
+}
+
+.empty-state p {
+  color: var(--mat-sys-on-surface-variant);
+}

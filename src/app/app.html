@@ -3,7 +3,11 @@
 <div class="workspace">
   <app-deck-list />
   <main class="main-content">
-    <app-deck-view />
+    @if (deckStore.decks().length > 0) {
+      <app-deck-view />
+    } @else {
+      <app-empty-state />
+    }
   </main>
 </div>
 
